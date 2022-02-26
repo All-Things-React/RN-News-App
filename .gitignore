@@ -58,3 +58,7 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# grapql
+src/graphql/__generated__/*
+!src/graphql/__generated__/.gitkeep
