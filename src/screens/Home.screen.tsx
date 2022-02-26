@@ -1,5 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -7,30 +5,26 @@ import {
   StyleSheet,
   Text,
   View,
-  Pressable,
 } from 'react-native';
 import {gql, useQuery} from 'urql';
+import Story from '../components/Story';
+import {StorySummaryFields} from '../graphql/fragments';
 import {
   AllStoriesQuery,
   AllStoriesQueryVariables,
 } from '../graphql/__generated__/operationTypes';
-import {RootStackParamList} from '../types';
 
 const STORIES_QUERY = gql`
   query AllStories {
     stories {
-      id
-      title
-      author
-      summary
+      ...StorySummaryFields
     }
   }
+
+  ${StorySummaryFields}
 `;
 
 const HomeScreen: React.FC = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
   const [{data, error, fetching}] = useQuery<
     AllStoriesQuery,
     AllStoriesQueryVariables
@@ -59,18 +53,7 @@ const HomeScreen: React.FC = () => {
       data={data?.stories}
       keyExtractor={item => item.id}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
-      renderItem={({item}) => (
-        <Pressable
-          onPress={() =>
-            navigation.navigate('StoryDetails', {
-              id: item.id,
-              title: item.title,
-            })
-          }>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.summary}>{item.summary}</Text>
-        </Pressable>
-      )}
+      renderItem={({item}) => <Story item={item} />}
     />
   );
 };
@@ -94,21 +77,8 @@ const styles = StyleSheet.create({
     marginVertical: 40,
   },
 
-  summary: {
-    fontSize: 18,
-    color: 'gray',
-  },
-
   flatlist: {
     paddingHorizontal: 20,
-  },
-
-  title: {
-    fontSize: 24,
-    fontWeight: '400',
-    textTransform: 'uppercase',
-    letterSpacing: 2,
-    marginBottom: 10,
   },
 
   error: {
