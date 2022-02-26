@@ -1,3 +1,4 @@
+import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import {StatusBar} from 'react-native';
 import {createClient, Provider as UrqlProvider} from 'urql';
@@ -10,8 +11,10 @@ const client = createClient({
 const App = () => {
   return (
     <UrqlProvider value={client}>
-      <StatusBar hidden />
-      <Stories />
+      <NavigationContainer>
+        <StatusBar hidden />
+        <Stories />
+      </NavigationContainer>
     </UrqlProvider>
   );
 };
