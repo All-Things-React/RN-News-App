@@ -9,6 +9,10 @@ import {
 import {useRoute, RouteProp} from '@react-navigation/core';
 import {RootStackParamList} from '../types';
 import {useQuery, gql} from 'urql';
+import {
+  StroyByIdQuery,
+  StroyByIdQueryVariables,
+} from '../graphql/__generated__/operationTypes';
 
 const STORY_BY_ID = gql`
   query StroyById($id: ID!) {
@@ -25,7 +29,10 @@ const STORY_BY_ID = gql`
 const StoryDetailsModal: React.FC = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'StoryDetails'>>();
 
-  const [{data, fetching, error}] = useQuery({
+  const [{data, fetching, error}] = useQuery<
+    StroyByIdQuery,
+    StroyByIdQueryVariables
+  >({
     query: STORY_BY_ID,
     variables: {id: route.params.id},
   });
@@ -42,6 +49,14 @@ const StoryDetailsModal: React.FC = () => {
     return (
       <View style={styles.container}>
         <Text style={styles.error}>Something went wrong {error.message}</Text>
+      </View>
+    );
+  }
+
+  if (!data?.story) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.error}>Story not found</Text>
       </View>
     );
   }
