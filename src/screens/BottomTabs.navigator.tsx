@@ -2,8 +2,9 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from './Home.screen';
 import BookmarksScreen from './Bookmarks.screen';
+import {BottomTabParamList} from '../types';
 
-const BottomTabs = createBottomTabNavigator();
+const BottomTabs = createBottomTabNavigator<BottomTabParamList>();
 
 const BottomTabsNavigator = () => {
   return (

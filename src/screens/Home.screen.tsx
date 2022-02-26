@@ -1,3 +1,5 @@
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -5,8 +7,10 @@ import {
   StyleSheet,
   Text,
   View,
+  Pressable,
 } from 'react-native';
 import {gql, useQuery} from 'urql';
+import {RootStackParamList} from '../types';
 
 const STORIES_QUERY = gql`
   query AllStories {
@@ -20,6 +24,9 @@ const STORIES_QUERY = gql`
 `;
 
 const HomeScreen: React.FC = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const [{data, error, fetching}] = useQuery({query: STORIES_QUERY});
 
   if (fetching) {
@@ -46,10 +53,10 @@ const HomeScreen: React.FC = () => {
       keyExtractor={item => item.id}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       renderItem={({item}) => (
-        <View>
+        <Pressable onPress={() => navigation.navigate('StoryDetails')}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.summary}>{item.summary}</Text>
-        </View>
+        </Pressable>
       )}
     />
   );
