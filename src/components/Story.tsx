@@ -15,18 +15,19 @@ import {
   StorySummaryFieldsFragment,
 } from '../graphql/__generated__/operationTypes';
 import {gql, useMutation} from 'urql';
+import {StorySummaryFields} from '../graphql/fragments';
 
 const ADD_BOOKMARK_MUTATION = gql`
   mutation AddBookmark($storyId: ID!) {
     addBookmark(storyId: $storyId) {
       id
       story {
-        id
-        title
-        bookmarkId
+        ...StorySummaryFields
       }
     }
   }
+
+  ${StorySummaryFields}
 `;
 
 const Story: React.FC<{item: StorySummaryFieldsFragment}> = ({item}) => {
