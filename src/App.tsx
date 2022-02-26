@@ -1,6 +1,7 @@
 import React from 'react';
-import {SafeAreaView, StatusBar, Text} from 'react-native';
+import {StatusBar} from 'react-native';
 import {createClient, Provider as UrqlProvider} from 'urql';
+import Stories from './Stories';
 
 const client = createClient({
   url: 'http://localhost:3000/graphql',
@@ -9,10 +10,8 @@ const client = createClient({
 const App = () => {
   return (
     <UrqlProvider value={client}>
-      <SafeAreaView>
-        <StatusBar />
-        <Text>App.tsx</Text>
-      </SafeAreaView>
+      <StatusBar hidden />
+      <Stories />
     </UrqlProvider>
   );
 };
