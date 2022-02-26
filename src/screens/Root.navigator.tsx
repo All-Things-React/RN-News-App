@@ -15,7 +15,10 @@ const RootNavigator: React.FC = () => {
         component={BottomTabsNavigator}
       />
       <RootStack.Screen
-        options={{presentation: 'modal'}}
+        options={({route}) => ({
+          presentation: 'modal',
+          title: route.params.title,
+        })}
         name="StoryDetails"
         component={StoryDetailsModal}
       />

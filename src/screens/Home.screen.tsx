@@ -53,7 +53,13 @@ const HomeScreen: React.FC = () => {
       keyExtractor={item => item.id}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       renderItem={({item}) => (
-        <Pressable onPress={() => navigation.navigate('StoryDetails')}>
+        <Pressable
+          onPress={() =>
+            navigation.navigate('StoryDetails', {
+              id: item.id,
+              title: item.title,
+            })
+          }>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.summary}>{item.summary}</Text>
         </Pressable>
