@@ -19,7 +19,7 @@ const STORIES_QUERY = gql`
   }
 `;
 
-const Stories = () => {
+const HomeScreen: React.FC = () => {
   const [{data, error, fetching}] = useQuery({query: STORIES_QUERY});
 
   if (fetching) {
@@ -55,7 +55,7 @@ const Stories = () => {
   );
 };
 
-export default Stories;
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -65,8 +65,7 @@ const styles = StyleSheet.create({
   },
 
   flatlistContainer: {
-    paddingTop: 100,
-    paddingBottom: 20,
+    paddingVertical: 30,
   },
 
   separator: {
