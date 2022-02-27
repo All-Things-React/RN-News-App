@@ -1,11 +1,12 @@
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types';
@@ -55,6 +56,32 @@ const Story: React.FC<{
     RemoveBookmarkMutationVariables
   >(REMOVE_BOOKMARK);
 
+  const handleAddBookmark = useCallback(async () => {
+    const result = await addBookmark({storyId: item.id});
+    if (
+      result.error &&
+      result.error.message.includes('Uh! Oh you are offline')
+    ) {
+      Alert.alert(
+        'You are offline!',
+        'Please connect to the internet to add a bookmark',
+      );
+    }
+  }, [addBookmark, item.id]);
+
+  const handleRemoveBookmark = useCallback(async () => {
+    const result = await removeBookmark({bookmarkId: item.bookmarkId!});
+    if (
+      result.error &&
+      result.error.message.includes('Uh! Oh you are offline')
+    ) {
+      Alert.alert(
+        'You are offline!',
+        'Please connect to the internet to remove a bookmark',
+      );
+    }
+  }, [removeBookmark, item.bookmarkId]);
+
   return (
     <Pressable
       onPress={() =>
@@ -68,13 +95,12 @@ const Story: React.FC<{
           {item.title} {item.bookmarkId ? '🔖' : ''}
         </Text>
         {!item.bookmarkId && !isAddingBookmark && cta === 'add' ? (
-          <Pressable onPress={() => addBookmark({storyId: item.id})}>
+          <Pressable onPress={handleAddBookmark}>
             <Text style={styles.bookmarkText}>Add bookmark</Text>
           </Pressable>
         ) : null}
         {item.bookmarkId && !isRemovingBookmark && cta === 'remove' ? (
-          <Pressable
-            onPress={() => removeBookmark({bookmarkId: item.bookmarkId})}>
+          <Pressable onPress={handleRemoveBookmark}>
             <Text style={styles.bookmarkText}>Remove bookmark</Text>
           </Pressable>
         ) : null}
