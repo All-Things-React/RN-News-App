@@ -12,6 +12,8 @@ import {RootStackParamList} from '../types';
 import {
   AddBookmarkMutation,
   AddBookmarkMutationVariables,
+  RemoveBookmarkMutation,
+  RemoveBookmarkMutationVariables,
   StorySummaryFieldsFragment,
 } from '../graphql/__generated__/operationTypes';
 import {gql, useMutation} from 'urql';
@@ -30,7 +32,16 @@ const ADD_BOOKMARK_MUTATION = gql`
   ${StorySummaryFields}
 `;
 
-const Story: React.FC<{item: StorySummaryFieldsFragment}> = ({item}) => {
+const REMOVE_BOOKMARK = gql`
+  mutation removeBookmark($bookmarkId: ID!) {
+    removeBookmark(bookmarkId: $bookmarkId)
+  }
+`;
+
+const Story: React.FC<{
+  item: StorySummaryFieldsFragment;
+  cta: 'add' | 'remove';
+}> = ({item, cta}) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -38,6 +49,11 @@ const Story: React.FC<{item: StorySummaryFieldsFragment}> = ({item}) => {
     AddBookmarkMutation,
     AddBookmarkMutationVariables
   >(ADD_BOOKMARK_MUTATION);
+
+  const [{fetching: isRemovingBookmark}, removeBookmark] = useMutation<
+    RemoveBookmarkMutation,
+    RemoveBookmarkMutationVariables
+  >(REMOVE_BOOKMARK);
 
   return (
     <Pressable
@@ -51,12 +67,18 @@ const Story: React.FC<{item: StorySummaryFieldsFragment}> = ({item}) => {
         <Text style={styles.title}>
           {item.title} {item.bookmarkId ? '🔖' : ''}
         </Text>
-        {!item.bookmarkId && !isAddingBookmark ? (
+        {!item.bookmarkId && !isAddingBookmark && cta === 'add' ? (
           <Pressable onPress={() => addBookmark({storyId: item.id})}>
             <Text style={styles.bookmarkText}>Add bookmark</Text>
           </Pressable>
         ) : null}
-        {isAddingBookmark ? <ActivityIndicator /> : null}
+        {item.bookmarkId && !isRemovingBookmark && cta === 'remove' ? (
+          <Pressable
+            onPress={() => removeBookmark({bookmarkId: item.bookmarkId})}>
+            <Text style={styles.bookmarkText}>Remove bookmark</Text>
+          </Pressable>
+        ) : null}
+        {isAddingBookmark || isRemovingBookmark ? <ActivityIndicator /> : null}
       </View>
       <Text style={styles.summary}>{item.summary}</Text>
     </Pressable>

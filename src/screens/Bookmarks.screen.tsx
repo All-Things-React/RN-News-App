@@ -70,7 +70,7 @@ const BookmarksScreen: React.FC = () => {
       data={data?.bookmarks}
       keyExtractor={item => item.id}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
-      renderItem={({item}) => <Story item={item.story} />}
+      renderItem={({item}) => <Story item={item.story} cta="remove" />}
     />
   );
 };
