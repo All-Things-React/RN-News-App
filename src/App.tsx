@@ -19,7 +19,8 @@ import {
 } from './graphql/__generated__/operationTypes';
 import {BOOKMARKS_QUERY} from './screens/Bookmarks.screen';
 import {useNetInfo} from '@react-native-community/netinfo';
-import AppOfflinePage from './components/AppOfflinePage';
+import AppOfflineMessage from './components/AppOfflineMessage';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 const client = createClient({
   url: 'http://localhost:3000/graphql',
@@ -97,17 +98,16 @@ const client = createClient({
 const App = () => {
   const {isConnected} = useNetInfo();
 
-  if (isConnected === false) {
-    return <AppOfflinePage />;
-  }
-
   return (
-    <UrqlProvider value={client}>
-      <NavigationContainer>
-        <StatusBar hidden />
-        <RootNavigator />
-      </NavigationContainer>
-    </UrqlProvider>
+    <SafeAreaProvider>
+      <UrqlProvider value={client}>
+        <NavigationContainer>
+          <StatusBar hidden />
+          <RootNavigator />
+        </NavigationContainer>
+        {isConnected === false ? <AppOfflineMessage /> : null}
+      </UrqlProvider>
+    </SafeAreaProvider>
   );
 };
 

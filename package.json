@@ -13,11 +13,13 @@
     "postinstall": "yarn generate:gql-types"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.16.1",
     "@react-native-community/netinfo": "^8.0.0",
     "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "@urql/exchange-graphcache": "^4.3.6",
+    "@urql/storage-rn": "^0.1.1",
     "graphql": "^16.3.0",
     "react": "17.0.2",
     "react-native": "0.67.3",
