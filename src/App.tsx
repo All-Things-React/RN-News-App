@@ -8,7 +8,7 @@ import {
   gql,
   Provider as UrqlProvider,
 } from 'urql';
-import {cacheExchange} from '@urql/exchange-graphcache';
+import {offlineExchange} from '@urql/exchange-graphcache';
 import RootNavigator from './screens/Root.navigator';
 import schema from './graphql/graphql.schema.json';
 import {
@@ -21,12 +21,20 @@ import {BOOKMARKS_QUERY} from './screens/Bookmarks.screen';
 import {useNetInfo} from '@react-native-community/netinfo';
 import AppOfflineMessage from './components/AppOfflineMessage';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {makeAsyncStorage} from '@urql/storage-rn';
+
+const storage = makeAsyncStorage({
+  dataKey: 'my-app-data',
+  metadataKey: 'my-app-metadata',
+  maxAge: 5,
+});
 
 const client = createClient({
   url: 'http://localhost:3000/graphql',
   exchanges: [
     dedupExchange,
-    cacheExchange({
+    offlineExchange({
+      storage,
       schema: schema as any,
       resolvers: {
         Query: {
